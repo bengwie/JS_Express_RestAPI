@@ -16,12 +16,20 @@ db.once("open", function() {
    var schema = mongoose.Schema;
    var animalSchema = new schema({
       type: {type: String, default: "goldfish"},
-      size: {type: String, default: "small"},
+      size: String,
       color: {type: String, default: "golden"},
       mass: {type: Number, default: 0.007},
       name: {type: String, default: "Angela"}
    });
 
+   animalSchema.pre("save", function(next) {
+      if (this.mass >= 100) {
+         this.size = "big";
+      } else {
+         this.size = "small";
+      }
+      next();
+   });
    var Animal = mongoose.model("Binatang", animalSchema);
    var elephant = new Animal({
       type: "elephant",
@@ -41,7 +49,7 @@ db.once("open", function() {
    var animal = new Animal({}); //Goldfish
    var animalDatas = [
       {type: "wolf",
-       mass: 1000,
+       mass: 40,
        name: "Wolfey"
       },
       elephant,
@@ -56,8 +64,8 @@ db.once("open", function() {
          Animal.find({size: "big"}, function(err, animals) {
             console.log("animals is: " + animals);
             animals.forEach(function(animal){
-               console.log(animal.name + " the " + animal.color +
-                     " " + animal.type);
+               console.log(animal.name + " the " + animal.size + " " +
+                     animal.color + " " + animal.type);
             });
             db.close(function() {
                console.log("Connection is closed"); 
