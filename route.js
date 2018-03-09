@@ -1,12 +1,16 @@
 'user strict';
 var express = require("express");
 var router = express.Router();
+var Question = require("./models").Question;
 
 // GET /questions
 // Route for questions collections
-router.get("/", (req, res) => {
-   var test = obj.prop;
-   res.json({response : "You sent me GET request!"});
+router.get("/", (req, res, next) => {
+   Question.find({}, null, {sort:{createdAt: -1}}, function(err, questions) {
+      if (err) next(err);
+      res.json(questions);
+   })
+   //res.json({response : "You sent me GET request!"});
 });
 
 
