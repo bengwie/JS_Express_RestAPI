@@ -3,11 +3,24 @@ var express = require("express");
 var router = express.Router();
 var Question = require("./models").Question;
 
+route.param("id", function(req, res, next, id) {
+   Question.findById(id, function(err, doc) {
+      if (err) return next(err);
+      if (!doc) {
+         err = new Error("Not Found");
+         err.status = 404;
+         return next(err);
+      }
+      req.question = doc;
+      next();
+   });
+});
+
 // GET /questions
 // Route for questions collections
 router.get("/", (req, res, next) => {
    Question.find({}, null, {sort:{createdAt: -1}}, function(err, questions) {
-      if (err) next(err);
+      if (err) return next(err);
       res.json(questions);
    })
    //res.json({response : "You sent me GET request!"});
@@ -16,25 +29,30 @@ router.get("/", (req, res, next) => {
 
 // POST /questions
 // Route for questions collections
-router.post("/", (req, res) => {
-   res.json({
-         response : "You sent me POST request!",
-         body : req.body});
+router.post("/", (req, res, next) => {
+   var question = new Question(req.body);
+   question.save(function(err, question) {
+      if (err) return next(err);
+      res.status(201);
+      res.json(question);
+   });
 });
 
-router.get("/:id", (req, res) => {
-   res.json({
-         response : "You sent me GET request with ID: " + req.params.id}); 
+router.get("/:id", (req, res, next) => {
+   res.json(req.question);
 });
+
 module.exports = router;
 
 // POST /questions/:qID/answers
 // Route for creating an answer
-router.post("/:qID/answers", (req, res) => {
-   res.json({
-         response : "You sent me POST request!",
-         questionId: req.params.qID,
-         body : req.body});
+router.post("/:qID/answers", (req, res, next) => {
+   req.question.answers.push(req.body);
+   req.question.save(function(err, question) {
+      if(err) return next(err);
+      res.status(201);
+      res.json(question);
+   });
 });
 
 // PUT /questions/:qID/answers/:aID
