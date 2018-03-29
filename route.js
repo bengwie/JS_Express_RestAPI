@@ -3,7 +3,7 @@ var express = require("express");
 var router = express.Router();
 var Question = require("./models").Question;
 
-route.param("id", function(req, res, next, id) {
+router.param("id", function(req, res, next, id) {
    Question.findById(id, function(err, doc) {
       if (err) return next(err);
       if (!doc) {
@@ -14,6 +14,16 @@ route.param("id", function(req, res, next, id) {
       req.question = doc;
       next();
    });
+});
+
+router.param("aid", function(req, res, next, id){
+   req.answer = req.question.answers.id(id);
+   if (!req.answer) {
+      var err = new Error("Not Found");
+      err.status = 404;
+      return next(err);
+   }
+   next();
 });
 
 // GET /questions
@@ -57,21 +67,21 @@ router.post("/:qID/answers", (req, res, next) => {
 
 // PUT /questions/:qID/answers/:aID
 // Edit a specific answer
-router.put("/:qID/answers/:aID", (req, res) => {
-   res.json({
-         response : "You sent me PUT request!",
-         questionId: req.params.qID,
-         answerId: req.params.aID,
-         body : req.body});
+router.put("/:qID/answers/:aID", (req, res, next) => {
+   req.answer.update(req.body, function(err, result) {
+      if (err) return next(err);
+      res.json(result);
+   });
 });
 
 // DELETE /questions/:qID/answers/:aID
 // Delete a specific answer
-router.delete("/:qID/answers/:aID", (req, res) => {
-   res.json({
-         response : "You sent me DELETE request!",
-         questionId: req.params.qID,
-         answerId: req.params.aID,
+router.delete("/:qID/answers/:aID", (req, res, next) => {
+   res.answer.remove(function(err){
+      req.question.save(function(err, question) {
+         if (err) return next(err);
+         res.json(question);
+      });
    });
 });
 
@@ -86,12 +96,12 @@ router.post("/:qID/answers/:aID/vote-:dir", (req, res, next) => {
       err.status = 303;
       next(err);
    } else {
-      res.json({
-            response : "You sent me POST request to /vote-" + req.params.dir,
-            questionId: req.params.qID,
-            answerId: req.params.aID,
-            vote: req.params.dir
+      req.vote = req.params.dir;
+   }}, (req, res) => {
+      req.answer.vote(req.vote, function(err, question){
+         if (err) return next(err);
+         res.json(question); 
       });
-   }
+
 });
 

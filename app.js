@@ -19,6 +19,22 @@ var jsonHandle = function (req, res, next) {
 app.use(logger("dev"));
 app.use(jsonParser());
 //app.use(jsonHandle);
+
+
+var mongoose = require("mongoose");
+
+mongoose.connect("mongodb://localhost:27017/qa");
+
+var db = mongoose.connection;
+
+db.on("error", function(err) {
+   console.error("connection error:" , err);
+});
+
+db.once("open", function() {
+   console.log("db connection successful");
+});
+
 app.use("/questions", route);
 
 app.listen(portNum, ()=> {
