@@ -72,3 +72,28 @@ switched to db sandbox
 > db.animals.find()
 { "_id" : ObjectId("5a8f19cdcd1ce16b307caa7b"), "type" : "elephant", "size" : "big", "color" : "gray", "mass" : 6000, "name" : "Lawrence", "__v" : 0 }
 
+PAloaner-m20:express_api administrator$ mongo
+MongoDB shell version v3.6.3
+connecting to: mongodb://127.0.0.1:27017
+MongoDB server version: 3.6.3
+Server has startup warnings: 
+2018-04-03T12:21:34.616-0700 I CONTROL  [initandlisten] 
+2018-04-03T12:21:34.616-0700 I CONTROL  [initandlisten] ** WARNING: Access control is not enabled for the database.
+2018-04-03T12:21:34.616-0700 I CONTROL  [initandlisten] **          Read and write access to data and configuration is unrestricted.
+2018-04-03T12:21:34.616-0700 I CONTROL  [initandlisten] 
+2018-04-03T12:21:34.616-0700 I CONTROL  [initandlisten] ** WARNING: This server is bound to localhost.
+2018-04-03T12:21:34.616-0700 I CONTROL  [initandlisten] **          Remote systems will be unable to connect to this server. 
+2018-04-03T12:21:34.616-0700 I CONTROL  [initandlisten] **          Start the server with --bind_ip <address> to specify which IP 
+2018-04-03T12:21:34.616-0700 I CONTROL  [initandlisten] **          addresses it should serve responses from, or with --bind_ip_all to
+2018-04-03T12:21:34.617-0700 I CONTROL  [initandlisten] **          bind to all interfaces. If this behavior is desired, start the
+2018-04-03T12:21:34.617-0700 I CONTROL  [initandlisten] **          server with --bind_ip 127.0.0.1 to disable this warning.
+2018-04-03T12:21:34.617-0700 I CONTROL  [initandlisten] 
+2018-04-03T12:21:34.617-0700 I CONTROL  [initandlisten] 
+2018-04-03T12:21:34.617-0700 I CONTROL  [initandlisten] ** WARNING: soft rlimits too low. Number of files is 256, should be at least 1000
+> use qa
+switched to db qa
+> db.questions.drop()
+true
+> db.questions.drop()
+false
+

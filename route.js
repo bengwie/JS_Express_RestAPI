@@ -56,7 +56,7 @@ module.exports = router;
 
 // POST /questions/:qID/answers
 // Route for creating an answer
-router.post("/:qID/answers", (req, res, next) => {
+router.post("/:id/answers", (req, res, next) => {
    req.question.answers.push(req.body);
    req.question.save(function(err, question) {
       if(err) return next(err);
@@ -67,7 +67,7 @@ router.post("/:qID/answers", (req, res, next) => {
 
 // PUT /questions/:qID/answers/:aID
 // Edit a specific answer
-router.put("/:qID/answers/:aID", (req, res, next) => {
+router.put("/:id/answers/:aid", (req, res, next) => {
    req.answer.update(req.body, function(err, result) {
       if (err) return next(err);
       res.json(result);
@@ -76,7 +76,7 @@ router.put("/:qID/answers/:aID", (req, res, next) => {
 
 // DELETE /questions/:qID/answers/:aID
 // Delete a specific answer
-router.delete("/:qID/answers/:aID", (req, res, next) => {
+router.delete("/:id/answers/:aid", (req, res, next) => {
    res.answer.remove(function(err){
       req.question.save(function(err, question) {
          if (err) return next(err);
@@ -88,7 +88,7 @@ router.delete("/:qID/answers/:aID", (req, res, next) => {
 // POST /questions/:qID/answers/:aID/vote-up
 // POST /questions/:qID/answers/:aID/vote-down
 // Vote on a specific answer
-router.post("/:qID/answers/:aID/vote-:dir", (req, res, next) => {
+router.post("/:id/answers/:aid/vote-:dir", (req, res, next) => {
    console.log(req.url);
    if (req.params.dir.search(/^(up|down)$/) === -1) {
       console.log("not found");
