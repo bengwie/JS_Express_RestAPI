@@ -19,10 +19,12 @@ router.param("id", function(req, res, next, id) {
 router.param("aid", function(req, res, next, id){
    req.answer = req.question.answers.id(id);
    if (!req.answer) {
+      console.log("Hi I am here!");
       var err = new Error("Not Found");
       err.status = 404;
       return next(err);
    }
+   console.log("answer is found!");
    next();
 });
 
@@ -96,12 +98,19 @@ router.post("/:id/answers/:aid/vote-:dir", (req, res, next) => {
       err.status = 303;
       next(err);
    } else {
+      console.log("test 1");
       req.vote = req.params.dir;
+      console.log("vote is " + req.vote);
+      next();
    }}, (req, res) => {
+      console.log("test 2");
       req.answer.vote(req.vote, function(err, question){
-         if (err) return next(err);
+         if (err) {
+            console.log("Found an error: " + err.message);
+            return next(err);
+         }
          res.json(question); 
       });
-
-});
+   }
+);
 

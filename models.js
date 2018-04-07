@@ -25,10 +25,13 @@ AnswerSchema.methods.update = function(updates, callback) {
 
 AnswerSchema.method("vote", function(vote, callback) {
    if (vote === "up") {
+      console.log("adding vote by 1");
       this.votes += 1;
    } else {
+      console.log("reducing vote by 1");
       this.votes -= 1;
    }
+   this.parent().save(callback);
 });
 
 var QuestionSchema = new Schema({

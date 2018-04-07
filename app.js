@@ -43,6 +43,7 @@ app.listen(portNum, ()=> {
 
 //Catch 404 exception, then forward this error handler
 app.use((req, res, next) => {
+   console.log("creating error 404 sample.");
    var err = new Error("Not Found");
    err.status = 404;
    next(err);
