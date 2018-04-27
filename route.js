@@ -54,6 +54,14 @@ router.get("/:id", (req, res, next) => {
    res.json(req.question);
 });
 
+router.get("/:id/answers", (req, res, next) => {
+   res.json(req.question.answers);
+});
+
+router.get("/:id/answers/:aid", (req, res, next) => {
+   res.json(req.answer)
+});
+
 module.exports = router;
 
 // POST /questions/:qID/answers
@@ -79,7 +87,7 @@ router.put("/:id/answers/:aid", (req, res, next) => {
 // DELETE /questions/:qID/answers/:aID
 // Delete a specific answer
 router.delete("/:id/answers/:aid", (req, res, next) => {
-   res.answer.remove(function(err){
+   req.answer.remove(function(err){
       req.question.save(function(err, question) {
          if (err) return next(err);
          res.json(question);
@@ -109,8 +117,7 @@ router.post("/:id/answers/:aid/vote-:dir", (req, res, next) => {
             console.log("Found an error: " + err.message);
             return next(err);
          }
-         res.json(question); 
+         res.json(question);
       });
    }
 );
-
